@@ -1,0 +1,32 @@
+name: Sync upstream
+
+on:
+  schedule:
+    # Every Monday at 04:23 UTC (12:23 China Standard Time / 13:23 Japan Standard Time).
+    # Weekly is intentionally low-maintenance while keeping the fork reasonably fresh.
+    - cron: "23 4 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-upstream-main
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sync main from upstream
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          gh api \
+            --method POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2026-03-10" \
+            "repos/${GH_REPO}/merge-upstream" \
+            -f branch=main
