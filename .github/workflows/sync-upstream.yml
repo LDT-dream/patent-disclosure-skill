@@ -1,10 +1,10 @@
-name: Sync upstream
+name: Sync upstream backup
 
 on:
   schedule:
-    # Every Monday at 04:23 UTC (12:23 China Standard Time / 13:23 Japan Standard Time).
-    # Weekly is intentionally low-maintenance while keeping the fork reasonably fresh.
-    - cron: "23 4 * * 1"
+    # Daily 11:37 China Standard Time / 12:37 Japan Standard Time.
+    # Avoid :00 because scheduled workflows are more likely to be delayed at peak times.
+    - cron: "37 3 * * *"
   workflow_dispatch:
 
 permissions:
@@ -13,6 +13,10 @@ permissions:
 concurrency:
   group: sync-upstream-main
   cancel-in-progress: true
+
+env:
+  UPSTREAM_REPO: handsomestWei/patent-disclosure-skill
+  BRANCH: main
 
 jobs:
   sync:
@@ -29,4 +33,59 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2026-03-10" \
             "repos/${GH_REPO}/merge-upstream" \
-            -f branch=main
+            -f branch="${BRANCH}"
+
+      - name: Verify fork contains latest upstream main
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          upstream_sha="$(gh api "repos/${UPSTREAM_REPO}/branches/${BRANCH}" --jq '.commit.sha')"
+          behind_by="$(gh api "repos/${GH_REPO}/compare/${upstream_sha}...${BRANCH}" --jq '.behind_by')"
+          echo "upstream_sha=${upstream_sha}"
+          echo "fork_branch=${BRANCH}"
+          echo "behind_by=${behind_by}"
+          if [ "${behind_by}" != "0" ]; then
+            echo "Fork verification failed: ${BRANCH} is still behind upstream."
+            exit 1
+          fi
+
+      - name: Keep scheduled backup alive
+        if: github.event_name == 'schedule'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          HEARTBEAT_BRANCH: sync-heartbeat
+        run: |
+          set -euo pipefail
+          WORK="$(mktemp -d)"
+          trap 'rm -rf "$WORK"' EXIT
+
+          git clone --quiet --depth=1 \
+            "https://x-access-token:${GH_TOKEN}@github.com/${GH_REPO}.git" \
+            "$WORK/repo"
+          cd "$WORK/repo"
+
+          now="$(date -u +%s)"
+          if git ls-remote --exit-code origin "refs/heads/${HEARTBEAT_BRANCH}" >/dev/null 2>&1; then
+            git fetch --quiet origin "${HEARTBEAT_BRANCH}:${HEARTBEAT_BRANCH}"
+            last="$(git show -s --format=%ct "${HEARTBEAT_BRANCH}")"
+            age="$((now - last))"
+            if [ "$age" -lt 2592000 ]; then
+              echo "Heartbeat is newer than 30 days; no heartbeat commit needed."
+              exit 0
+            fi
+            git switch --quiet "${HEARTBEAT_BRANCH}"
+          else
+            git switch --orphan "${HEARTBEAT_BRANCH}"
+            git rm -rf . >/dev/null 2>&1 || true
+          fi
+
+          printf 'Last scheduled sync heartbeat: %s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > heartbeat.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add heartbeat.txt
+          git commit --quiet -m "chore: refresh sync heartbeat"
+          git push --quiet origin "HEAD:${HEARTBEAT_BRANCH}"
+          echo "Refreshed ${HEARTBEAT_BRANCH}."
