@@ -2,7 +2,7 @@
 
 # 中国专利.skill
 
-> 专利点挖掘与交底书（发明/实用/外观）编写，已有交底改写成申请文件，公布公告著录检索，通俗解读专利，对照审查口径出政策简报，辅助审查答复。
+> 专利点挖掘与交底书（发明/实用/外观）编写，已有交底改写成申请文件，交底到申请可以一起做，公布公告著录检索，通俗解读专利，对照审查口径出政策简报，辅助审查答复。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.9+](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](https://www.python.org/)
@@ -98,13 +98,13 @@
 
 ## 子技能列表
 
-<!-- 使用 HTML 表格：避免 GitHub 管道表把左列挤窄 -->
-<table>
+<!-- 使用 HTML 表格：技能/名称/触发/详情按内容收紧，剩余给能力 -->
+<table width="100%">
 <colgroup>
 <col width="1%">
 <col width="1%">
 <col>
-<col>
+<col width="1%">
 <col width="1%">
 </colgroup>
 <thead>
@@ -112,7 +112,7 @@
 <th align="left" nowrap width="1%">技能</th>
 <th align="left" nowrap width="1%">名称</th>
 <th align="left">能力</th>
-<th align="left">触发</th>
+<th align="left" nowrap width="1%">触发</th>
 <th align="left" nowrap width="1%">详情</th>
 </tr>
 </thead>
@@ -121,42 +121,49 @@
 <td nowrap width="1%"><a href="skills/patent-disclosure/README.md"><code>patent-disclosure</code></a></td>
 <td nowrap width="1%">交底书编写</td>
 <td>发明 / 实用新型 / 外观设计分模板成文；专利点挖掘、查新、成稿与迭代</td>
-<td>「交底书」</td>
+<td nowrap width="1%">「交底书」</td>
 <td nowrap width="1%"><a href="skills/patent-disclosure/README.md">详情</a></td>
 </tr>
 <tr>
 <td nowrap width="1%"><a href="skills/patent-application/README.md"><code>patent-application</code></a></td>
 <td nowrap width="1%">申请文件</td>
 <td>把已有交底改写成权利要求书、说明书、摘要和黑白附图</td>
-<td>「申请文件」· 「申请底稿」</td>
+<td nowrap width="1%">「申请文件」· 「申请底稿」</td>
 <td nowrap width="1%"><a href="skills/patent-application/README.md">详情</a></td>
+</tr>
+<tr>
+<td nowrap width="1%"><a href="skills/patent-docket/README.md"><code>patent-docket</code></a></td>
+<td nowrap width="1%">案卷会稿</td>
+<td>工程师把材料丢进来，一趟写出交底书和申请文件；清单上的问题最多来回三轮，缺事实就问、不编，少跟代理人来回对稿</td>
+<td nowrap width="1%">「交底申请一起做」· 「从零出交底和申请」</td>
+<td nowrap width="1%"><a href="skills/patent-docket/README.md">详情</a></td>
 </tr>
 <tr>
 <td nowrap width="1%"><a href="skills/patent-reader/README.md"><code>patent-reader</code></a></td>
 <td nowrap width="1%">通俗解读</td>
 <td>公开号或 PDF 成通俗笔记、图谱与 Obsidian 入库</td>
-<td>「读专利」</td>
+<td nowrap width="1%">「读专利」</td>
 <td nowrap width="1%"><a href="skills/patent-reader/README.md">详情</a></td>
 </tr>
 <tr>
 <td nowrap width="1%"><a href="skills/patent-oa/README.md"><code>patent-oa</code></a></td>
 <td nowrap width="1%">审查答复辅助</td>
 <td>审查意见问答，输出答复稿；知识蒸馏与可选向量检索</td>
-<td>「审查答复」· 「审查意见」</td>
+<td nowrap width="1%">「审查答复」· 「审查意见」</td>
 <td nowrap width="1%"><a href="skills/patent-oa/README.md">详情</a></td>
 </tr>
 <tr>
 <td nowrap width="1%"><a href="skills/patent-search/README.md"><code>patent-search</code></a></td>
 <td nowrap width="1%">著录检索</td>
-<td>按发明人、申请人、分类号或名称检索公布公告，输出检索报告</td>
-<td>「著录检索」</td>
+<td>按发明人、申请人、分类号、名称或摘要检索公布公告；也可从单图或权要生成检索式</td>
+<td nowrap width="1%">「著录检索」</td>
 <td nowrap width="1%"><a href="skills/patent-search/README.md">详情</a></td>
 </tr>
 <tr>
 <td nowrap width="1%"><a href="skills/patent-exam-policy/README.md"><code>patent-exam-policy</code></a></td>
 <td nowrap width="1%">政策简报</td>
 <td>对照国知局近期口径，输出政策解读报告，整理对交底写法的影响；可选技能进化</td>
-<td>「政策简报」· 「政策雷达」</td>
+<td nowrap width="1%">「政策简报」· 「政策雷达」</td>
 <td nowrap width="1%"><a href="skills/patent-exam-policy/README.md">详情</a></td>
 </tr>
 </tbody>
@@ -187,7 +194,7 @@
 
 ## 参考文档
 
-- [技能入口与 Agent 流程](SKILL.md)（交底 / 申请文件 / 著录检索 / 解读 / 政策简报 / 审查答复）
+- [技能入口与 Agent 流程](SKILL.md)（交底 / 申请文件 / 案卷会稿 / 著录检索 / 解读 / 政策简报 / 审查答复）
 - [详细安装说明](INSTALL.md)
 - [Obsidian 安装与可选社区插件（Windows）](skills/patent-reader/docs/obsidian-setup-guide.md)
 
