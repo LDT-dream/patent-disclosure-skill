@@ -56,6 +56,7 @@ from browser import launch_chromium
 from cnipa_parse import (
     EpubSearchHit,
     application_number_for_epub_query,
+    publication_number_for_epub_query,
     parse_reported_page_size,
     parse_reported_total,
     parse_reported_total_pages,
@@ -554,6 +555,8 @@ def _adapt_advanced_fields(fields: dict[str, str]) -> dict[str, str]:
             continue
         if field == "application_number":
             text = application_number_for_epub_query(text) or text
+        elif field == "publication_number":
+            text = publication_number_for_epub_query(text) or text
         adapted[field] = text
     return adapted
 

@@ -18,6 +18,7 @@ from cnipa_parse import (
     parse_reported_total,
     parse_reported_total_pages,
     parse_search_result_html,
+    publication_number_for_epub_query,
 )
 from cnipa_search import (
     _build_parser,
@@ -73,6 +74,7 @@ from cnipa_crawler import (
     fill_advanced_field,
     has_next_result_page,
     search_advanced,
+    _adapt_advanced_fields,
 )
 from derived_query import (
     join_and,
@@ -157,6 +159,25 @@ class ListResultParserTests(unittest.TestCase):
         )
         self.assertEqual(
             application_number_for_epub_query("CN201921114883.3"), "2019211148833"
+        )
+
+
+    def test_adapts_publication_number_for_epub_query(self) -> None:
+        self.assertEqual(
+            publication_number_for_epub_query("CN210476989U"), "210476989U"
+        )
+        self.assertEqual(
+            publication_number_for_epub_query("CN 210476989 U"), "210476989U"
+        )
+        self.assertEqual(
+            publication_number_for_epub_query("210476989U"), "210476989U"
+        )
+        self.assertEqual(publication_number_for_epub_query("10285"), "10285")
+        self.assertEqual(publication_number_for_epub_query("%285352%"), "%285352%")
+        self.assertEqual(publication_number_for_epub_query("CN%285352%"), "%285352%")
+        self.assertEqual(
+            _adapt_advanced_fields({"publication_number": "CN210476989U"}),
+            {"publication_number": "210476989U"},
         )
 
 
