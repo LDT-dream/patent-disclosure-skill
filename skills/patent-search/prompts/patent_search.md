@@ -81,7 +81,7 @@ python skills/patent-search/tools/cnipa_search.py \
 - 没采到总页数时，只说还能不能点「下页」。
 - 退出码 `3` 或 `complete: false` 可以展示部分记录，并写明停止原因（`max_pages` / `max_pages_hard` / `http_400` / `stalled` 等）。
 - 条数估计用 `(total_pages-1)*page_size_actual + 末页实条`；末页可能不足一页。
-- WAF、验证码、DOM 改版记为检索失败，与零结果分开写。
+- WAF、验证码、DOM 改版记为检索失败，与零结果分开写。stderr `CNIPA_EPUB_ERROR` 带 `reason=`：`backend_timeout` / `backend_error` 写「公布站后端未返回」，建议缩窄条件后再查；`waf_rejected`、`submit_not_sent` 或「未出现高级查询页」写「公布站拦截或放行超时（脚本已换新会话重试一次）」，建议隔半小时再查。
 - 公布公告只覆盖已公开/公告记录。
 
 ## 同名归属（个人清单用法）
